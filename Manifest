@@ -1,0 +1,9 @@
+Manifest
+attaboy.gemspec
+Gemfile
+Gemfile.lock
+lib/attaboy.rb
+test/attaboy_spec.rb
+test/spec_helper.rb
+test/fixtures/migrations/attaboy_spec_migrations.rb
+test/fixtures/models/some_model.rb
