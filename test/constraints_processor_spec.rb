@@ -38,31 +38,31 @@ describe ConstraintsProcessor do
     
     it "checks the database constraints for each validator" do
       validators.each do |validator|
-        constraints_processor.should_receive(:check_database_constraint_for_validator).with(some_model, validator)
+        constraints_processor.should_receive(:check_database_constraints_for_validator).with(some_model, validator)
       end
       constraints_processor.check_database_constraints(validators)
     end
   end
   
-  describe :check_database_constraint_for_validator do
+  describe :check_database_constraints_for_validator do
     let(:validator)             { mock("Valitator") }
     let(:some_model)            { mock("Some model", :validators => [validator]) }
     let(:constraints_processor) { ConstraintsProcessor.new(some_model) }
-    let(:query)                 { mock("Query") }
+    let(:queries)               { mock("Queries") }
     
     before :each do
-      QueryBuilder.stub!(:build_query_for_model_validator => query)
-      query.stub!(:run)
+      QueryBuilder.stub!(:build_queries_for_model_validator => queries)
+      queries.stub!(:run)
     end
     
     it "builds the query for that validator" do
-      QueryBuilder.should_receive(:build_query_for_model_validator).with(some_model, validator)
-      constraints_processor.check_database_constraint_for_validator(some_model, validator)
+      QueryBuilder.should_receive(:build_queries_for_model_validator).with(some_model, validator)
+      constraints_processor.check_database_constraints_for_validator(some_model, validator)
     end
     
     it "runs the query" do
-      query.should_receive(:run)
-      constraints_processor.check_database_constraint_for_validator(some_model, validator)
+      queries.should_receive(:run)
+      constraints_processor.check_database_constraints_for_validator(some_model, validator)
     end
   end
 end
