@@ -9,10 +9,11 @@ $LOAD_PATH.unshift test_models_path unless $LOAD_PATH.include?(test_models_path)
 
 require "rubygems"
 require "active_record"
-require "attaboy"
-require "attaboy_spec_migrations"
-require "some_model"
 require "database_cleaner"
+
+Dir[File.join(lib_path, "*.rb")].each {|file| require File.basename(file) }
+Dir[File.join(migrations_path, "*.rb")].each {|file| require File.basename(file) }
+Dir[File.join(test_models_path, "*.rb")].each {|file| require File.basename(file) }
 
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 ActiveRecord::Base.configurations = true
