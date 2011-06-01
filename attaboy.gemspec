@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Marc Lainez}]
-  s.date = %q{2011-05-31}
+  s.date = %q{2011-06-01}
   s.description = %q{Gives recommandations about the constraints that should be set on the database schema}
   s.email = %q{ml@theotherguys.be}
   s.extra_rdoc_files = [%q{README.rdoc}, %q{lib/attaboy.rb}, %q{lib/constraints_processor.rb}, %q{lib/data_factory.rb}, %q{lib/query_builder.rb}]

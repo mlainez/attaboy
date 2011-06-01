@@ -1,5 +1,5 @@
 Given /^I have a model with a presence validator$/ do
-  pending
+  @model = SomeModel
 end
 
 When /^I execute attaboy$/ do
