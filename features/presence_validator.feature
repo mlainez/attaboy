@@ -6,4 +6,4 @@ Feature: Oupout report for presence validator
   Scenario: Ouput report with presence validator
     Given I have a model with a presence validator
     When I execute attaboy
-    Then I should see "is not supposed to happen"
+    Then I should see "was not expected to pass"

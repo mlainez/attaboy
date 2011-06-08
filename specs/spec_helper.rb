@@ -5,4 +5,4 @@ require "active_record"
 require "database_cleaner"
 
 Dir["#{ROOT}/lib/**/*.rb"].each{ |f| require f }
-Dir["#{ROOT}/specs/**/*.rb"].each{ |f| require f }
+Dir["#{ROOT}/specs/lib/**/*.rb"].each{ |f| require f }

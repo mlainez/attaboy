@@ -3,6 +3,10 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe ConstraintsProcessor do
   describe :initialize do
     let(:some_model) { mock("Some model") }
+    
+    before :each do
+      some_model.stub!(:validators)
+    end
   
     it "gets all the validators used within that model class" do
       some_model.should_receive(:validators)
@@ -25,7 +29,7 @@ describe ConstraintsProcessor do
       constraints_processor.run
     end
     
-    it "prints the summary" do
+    it "prints the output" do
       constraints_processor.should_receive(:print_summary)
       constraints_processor.run
     end
@@ -49,10 +53,13 @@ describe ConstraintsProcessor do
     let(:some_model)            { mock("Some model", :validators => [validator]) }
     let(:constraints_processor) { ConstraintsProcessor.new(some_model) }
     let(:queries)               { mock("Queries") }
+    let(:output)                { {} }
+    let(:query_executor)        { mock("Query Executor") }
     
     before :each do
       QueryBuilder.stub!(:build_queries_for_model_validator => queries)
-      queries.stub!(:run)
+      QueryExecutor.stub!(:new => query_executor)
+      query_executor.stub!(:run)
     end
     
     it "builds the query for that validator" do
@@ -60,9 +67,22 @@ describe ConstraintsProcessor do
       constraints_processor.check_database_constraints_for_validator(some_model, validator)
     end
     
-    it "runs the query" do
-      queries.should_receive(:run)
+    it "creates a new QueryExecutor" do
+      QueryExecutor.should_receive(:new).with(some_model, queries, output)
       constraints_processor.check_database_constraints_for_validator(some_model, validator)
     end
+    
+    it "asks the QueryExecuter to run the queries" do
+      query_executor.should_receive(:run)
+      constraints_processor.check_database_constraints_for_validator(some_model, validator)
+    end
+  end
+  
+  describe :print_summary do
+    it "gets the errors"
+    it "prints the errors"
+    it "gets the notices"
+    it "prints the notices"
+    it "prints the short summary"
   end
 end

@@ -105,13 +105,13 @@ describe QueryBuilder do
       end
       
       it "checks if the validator is a presence validator" do
-        validator_class.should_receive(:instance_of?).with(ActiveModel::Validations::PresenceValidator)
+        validator_class.should_receive(:==).with(ActiveModel::Validations::PresenceValidator)
         QueryBuilder.build_queries_for_attributes_triggers_and_validator_type(table_name, attributes, triggers, validator_class)
       end
       
       context "when the validator is a presence validator" do
         before :each do
-          validator_class.stub!(:instance_of? => true)
+          validator_class.stub!(:== => true)
         end
         
         it "creates an SQL insert query with the attributes with the trigger set as NULL for each trigger" do
@@ -134,10 +134,18 @@ describe QueryBuilder do
       let(:keys)            { ["key1", "key2"] }
       let(:values)          { ["'value1'", "'value2'"] }
       let(:table_name)      { "Table" }
+      let(:query)           { "Query" }
       
       before :each do
         attributes.stub!(:keys => keys)
         attributes.stub!(:values => values)
+        attributes.stub!(:[]= => nil)
+        Query.stub!(:new => query)
+      end
+      
+      it "changes the trigger value to NULL" do
+        attributes.should_receive(:[]=).with(trigger.to_s, "NULL")
+        QueryBuilder.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger)
       end
       
       it "gets the keys from the attributes hash" do
@@ -150,9 +158,14 @@ describe QueryBuilder do
         QueryBuilder.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger)
       end
       
+      it "creates a new query with the trigger NULL and the attributes as values" do
+        query_string = "INSERT into #{table_name} (#{keys.join(',')})"+" VALUES(#{values.join(',')})"
+        Query.should_receive(:new).with(query_string, trigger)
+        QueryBuilder.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger)
+      end
+      
       it "returns an insert sql query with the trigger NULL and the attributes as values" do
-        query = "INSERT into #{table_name} (#{keys.join(',')})"+" VALUES(#{values.join(',')})"
-        QueryBuilder.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger).should eql query
+        QueryBuilder.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger).should eq query
       end
     end
   end

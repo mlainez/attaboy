@@ -1,8 +1,8 @@
 class ConstraintsProcessor
-  
   def initialize(model_class)
     @model_class      = model_class
     @model_validators = model_class.validators
+    @output           = {}
   end
   
   def run
@@ -17,7 +17,11 @@ class ConstraintsProcessor
   end
   
   def check_database_constraints_for_validator(model_class, model_validator)
-    queries = QueryBuilder.build_queries_for_model_validator(model_class, model_validator)
-    queries.run
+    queries        = QueryBuilder.build_queries_for_model_validator(model_class, model_validator)
+    query_executor = QueryExecutor.new(@model_class, queries, @output)
+    query_executor.run
+  end
+  
+  def print_summary
   end
 end

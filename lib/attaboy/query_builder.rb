@@ -21,7 +21,7 @@ class QueryBuilder
   end
   
   def self.build_queries_for_attributes_triggers_and_validator_type(table_name, attributes, triggers, validator_class)
-    if validator_class.instance_of?(PRESENCE_VALIDATOR)
+    if validator_class == PRESENCE_VALIDATOR
       triggers.inject([]) do |queries, trigger|
         queries << create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger)
         queries
@@ -30,8 +30,9 @@ class QueryBuilder
   end
   
   def self.create_null_insert_query_for_attributes_and_trigger(table_name, attributes, trigger)
+    attributes[trigger.to_s] = "NULL"
     keys   = attributes.keys
     values = attributes.values
-    "INSERT into #{table_name} (#{keys.join(',')})"+" VALUES(#{values.join(',')})"
+    Query.new("INSERT into #{table_name} (#{keys.join(',')})"+" VALUES(#{values.join(',')})", trigger)
   end
 end
